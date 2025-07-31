@@ -67,6 +67,11 @@ body {
         font-size: 2.8rem;
         font-weight: 700;
     }
+    .history {
+        color: #888;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
 }
 
 // Button panel
@@ -119,6 +124,15 @@ body {
         background: #f7f7f7;
         color: #555;
         font-weight: 500;
+    }
+    .btn-del {
+        background: #ff6b6b;
+        color: white;
+        font-weight: bold;
+
+        &:hover {
+            background: #ff4d4d;
+        }
     }
 }
 
