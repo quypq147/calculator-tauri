@@ -15,8 +15,7 @@
       {
         "title": "Calculator Tauri App",
         "width": 400,
-        "height": 700,
-        "resizable": true
+        "height": 700
       }
     ],
     "security": {

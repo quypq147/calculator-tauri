@@ -135,4 +135,53 @@ body {
         }
     }
 }
+.hidden {
+  display: none;
+}
+.dropdown {
+  position: relative;
+
+  .btn-tool {
+    position: relative;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #2c2c2c;
+    border: 1px solid #444;
+    padding: 0.5rem 0;
+    width: 150px;
+    border-radius: 8px;
+    z-index: 10;
+
+    .mode-option {
+      padding: 0.4rem 1rem;
+      color: #fff;
+      cursor: pointer;
+
+      &:hover {
+        background: #444;
+      }
+    }
+  }
+}
+.programmer-buttons,
+.statistic-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+
+  .btn {
+    background: #e6f7ff;
+    color: #007acc;
+    font-weight: bold;
+    border-radius: 18px;
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+}
+
 

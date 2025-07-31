@@ -1,17 +1,56 @@
-import { invoke } from "@tauri-apps/api/core";
-
-let greetInputEl: HTMLInputElement | null;
-let greetMsgEl: HTMLElement | null;
+// === main.ts ===
+import { evaluate } from "mathjs";
 
 const equationEl = document.querySelector("#equation")! as HTMLDivElement;
 const resultEl = document.querySelector("#result")! as HTMLDivElement;
 const historyEl = document.querySelector("#history")! as HTMLDivElement;
-const history: string[] = [];
+
+const scientificPanel = document.getElementById("scientific-buttons")!;
+const programmerPanel = document.getElementById("programmer-buttons")!;
+const statisticPanel = document.getElementById("statistic-buttons")!;
+const viewBtn = document.querySelector(".dropdown .btn-tool")!;
+const viewMenu = document.getElementById("view-menu")!;
 
 let currentInput = "0";
 let currentEquation = "";
+const history: string[] = [];
 
-// Làm tròn kết quả với số chữ số thập phân tùy chỉnh
+viewBtn.addEventListener("click", () => {
+  viewMenu.classList.toggle("hidden");
+});
+
+// Chọn chế độ
+document.querySelectorAll(".mode-option").forEach((item) => {
+  item.addEventListener("click", () => {
+    const mode = (item as HTMLElement).dataset.mode;
+
+    // Ẩn menu sau khi chọn
+    viewMenu.classList.add("hidden");
+
+    // Ẩn tất cả các phần mở rộng
+    scientificPanel.classList.add("hidden");
+    programmerPanel.classList.add("hidden");
+    statisticPanel.classList.add("hidden");
+
+    // Hiện phần tương ứng với mode
+    switch (mode) {
+      case "scientific":
+        scientificPanel.classList.remove("hidden");
+        break;
+      case "programmer":
+        programmerPanel.classList.remove("hidden");
+        break;
+      case "statistic":
+        statisticPanel.classList.remove("hidden");
+        break;
+      case "standard":
+        // Không hiện gì thêm
+        break;
+    }
+  });
+});
+
+
 function roundResult(value: number, digits = 10): number {
   return Math.round((value + Number.EPSILON) * 10 ** digits) / 10 ** digits;
 }
@@ -36,8 +75,6 @@ function updateDisplay() {
 
 function handleInput(value: string) {
   const lastChar = currentInput.slice(-1);
-
-  // Tự thêm × nếu có số trước dấu (
   if (value === "(" && /[0-9)]/.test(lastChar)) {
     currentInput += "×(";
   } else if (currentInput === "0" && value !== "." && value !== ")") {
@@ -45,7 +82,6 @@ function handleInput(value: string) {
   } else {
     currentInput += value;
   }
-
   updateDisplay();
 }
 
@@ -54,9 +90,8 @@ function handleOperator(value: string) {
     currentEquation += currentInput + ` ${value} `;
     currentInput = "";
   } else if (currentEquation !== "") {
-    currentEquation = currentEquation.trim().replace(/[\+\-\×÷]$/, value) + " ";
+    currentEquation = currentEquation.trim().replace(/[-+×÷]$/, value) + " ";
   }
-
   updateDisplay();
 }
 
@@ -66,118 +101,115 @@ function handleAction(value: string) {
       currentInput = "0";
       currentEquation = "";
       break;
-
     case "⌫":
-      if (currentInput.length > 1) {
-        currentInput = currentInput.slice(0, -1);
-      } else if (currentInput.length === 1) {
-        currentInput = "0";
-      } else if (currentEquation.length > 0) {
-        currentEquation = currentEquation.trim().slice(0, -1).trim();
-      }
+      if (currentInput.length > 1) currentInput = currentInput.slice(0, -1);
+      else if (currentEquation.length > 0)
+        currentEquation = currentEquation.trim().slice(0, -1);
+      else currentInput = "0";
       break;
-
     case "=":
       const expression = (currentEquation + currentInput).trim();
       if (!expression) return;
-
       if (!isBracketsBalanced(expression)) {
         currentInput = "Lỗi ngoặc";
       } else {
         try {
-          const finalExpr = expression.replace(/×/g, "*").replace(/÷/g, "/");
-          const result = eval(finalExpr);
+          const finalExpr = expression
+            .replace(/×/g, "*")
+            .replace(/÷/g, "/")
+            .replace(/π/g, "pi");
+          const result = evaluate(finalExpr);
           const rounded = roundResult(result);
           currentInput = rounded.toString();
           history.length = 0;
           history.push(`${expression} = ${rounded}`);
         } catch (e) {
-          console.error("Eval error", e);
           currentInput = "Lỗi tính toán";
         }
       }
       currentEquation = "";
       break;
-
-    case "√":
-      const numSqrt = parseFloat(currentInput);
-      if (isNaN(numSqrt) || numSqrt < 0) {
-        currentInput = "Lỗi";
-      } else {
-        const result = Math.sqrt(numSqrt);
+    case "√": {
+      const num = parseFloat(currentInput);
+      if (isNaN(num) || num < 0) currentInput = "Lỗi";
+      else {
+        const result = Math.sqrt(num);
         const rounded = roundResult(result);
         currentInput = rounded.toString();
         history.length = 0;
-        history.push(`√(${numSqrt}) = ${rounded}`);
+        history.push(`√(${num}) = ${rounded}`);
       }
       currentEquation = "";
       break;
-
-    case "1/x":
-      const numInv = parseFloat(currentInput);
-      if (isNaN(numInv) || numInv === 0) {
-        currentInput = "Lỗi";
-      } else {
-        const result = 1 / numInv;
+    }
+    case "1/x": {
+      const num = parseFloat(currentInput);
+      if (isNaN(num) || num === 0) currentInput = "Lỗi";
+      else {
+        const result = 1 / num;
         const rounded = roundResult(result);
         currentInput = rounded.toString();
         history.length = 0;
-        history.push(`1/(${numInv}) = ${rounded}`);
+        history.push(`1/(${num}) = ${rounded}`);
       }
       currentEquation = "";
       break;
-
+    }
     case "+/-":
-      if (currentInput.startsWith("-")) {
-        currentInput = currentInput.slice(1);
-      } else if (currentInput !== "0") {
-        currentInput = "-" + currentInput;
+      if (currentInput.startsWith("-")) currentInput = currentInput.slice(1);
+      else if (currentInput !== "0") currentInput = "-" + currentInput;
+      break;
+    case "%": {
+      const num = parseFloat(currentInput);
+      if (!isNaN(num)) {
+        const result = roundResult(num / 100);
+        currentInput = result.toString();
       }
       break;
-
-    case "%":
-      const percent = parseFloat(currentInput);
-      if (!isNaN(percent)) {
-        const rounded = roundResult(percent / 100);
-        currentInput = rounded.toString();
-      }
-      break;
+    }
   }
-
   updateDisplay();
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  greetInputEl = document.querySelector("#greet-input");
-  greetMsgEl = document.querySelector("#greet-msg");
-  document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    greet();
-  });
-});
+function handleScientific(func: string) {
+  try {
+    let expr = currentInput;
+    if (func === "π") expr = "pi";
+    else if (func === "x^y") {
+      currentInput += "^";
+      updateDisplay();
+      return;
+    } else if (func === "e^x") expr = `e^(${currentInput})`;
+    else expr = `${func}(${currentInput})`;
 
-// Xử lý các nút
-document.querySelectorAll(".btn").forEach((button) => {
-  button.addEventListener("click", () => {
-    const value = button.textContent?.trim() || "";
-
-    if (button.classList.contains("btn-equals")) {
-      handleAction("="); // ✅ xử lý dấu =
-    } else if (button.classList.contains("btn-operator")) {
-      handleOperator(value);
-    } else if (button.classList.contains("btn-action")) {
-      handleAction(value);
-    } else {
-      handleInput(value);
-    }
-  });
-});
-
-
-
-
-
-function greet() {
-  throw new Error("Function not implemented.");
+    const result = evaluate(expr);
+    const rounded = roundResult(result);
+    currentInput = rounded.toString();
+    history.length = 0;
+    history.push(`${expr} = ${rounded}`);
+    currentEquation = "";
+    updateDisplay();
+  } catch (e) {
+    currentInput = "Lỗi hàm";
+    updateDisplay();
+  }
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const value = btn.textContent?.trim() || "";
+      if (btn.classList.contains("btn-equals")) handleAction("=");
+      else if (btn.classList.contains("btn-operator")) handleOperator(value);
+      else if (btn.classList.contains("btn-action")) handleAction(value);
+      else handleInput(value);
+    });
+  });
+
+  document.querySelectorAll(".btn-scientific").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const value = btn.textContent?.trim() || "";
+      handleScientific(value);
+    });
+  });
+});

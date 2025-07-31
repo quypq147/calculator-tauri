@@ -12,7 +12,15 @@
   <main class="container calculator">
     <div class="top">
       <div class="tool-bar">
-        <button class="btn-tool">View</button>
+        <div class="dropdown">
+          <button class="btn-tool">View ▾</button>
+          <div class="dropdown-menu hidden" id="view-menu">
+            <div class="mode-option" data-mode="standard">Standard</div>
+            <div class="mode-option" data-mode="scientific">Scientific</div>
+            <div class="mode-option" data-mode="programmer">Programmer</div>
+            <div class="mode-option" data-mode="statistic">Statistic</div>
+          </div>
+        </div>
         <button class="btn-tool">Edit</button>
         <button class="btn-tool">Help</button>
       </div>
@@ -24,6 +32,7 @@
     </div>
 
     <div class="bottom">
+      <!-- Buttons for calculator -->
       <div class="buttons">
         <button class="btn btn-action">C</button>
         <button class="btn btn-action">+/-</button>
@@ -49,7 +58,31 @@
         <button class="btn btn-equals">=</button>
         <button class="btn btn-action">√</button>
         <button class="btn btn-action">1/x</button>
+      </div>
+      <!--Scientific Mode Buttons-->
+      <div class="scientific-buttons hidden" id="scientific-buttons">
+        <button class="btn btn-scientific">sin</button>
+        <button class="btn btn-scientific">cos</button>
+        <button class="btn btn-scientific">tan</button>
+        <button class="btn btn-scientific">ln</button>
+        <button class="btn btn-scientific">log</button>
+        <button class="btn btn-scientific">x^y</button>
+        <button class="btn btn-scientific">e^x</button>
+        <button class="btn btn-scientific">π</button>
+      </div>
+      <!-- Programmer Mode (chưa làm chức năng nhưng để sẵn UI) -->
+      <div class="programmer-buttons hidden" id="programmer-buttons">
+        <button class="btn btn-programmer">BIN</button>
+        <button class="btn btn-programmer">HEX</button>
+        <button class="btn btn-programmer">AND</button>
+        <button class="btn btn-programmer">OR</button>
+      </div>
 
+      <!-- Statistic Mode -->
+      <div class="statistic-buttons hidden" id="statistic-buttons">
+        <button class="btn btn-statistic">mean</button>
+        <button class="btn btn-statistic">median</button>
+        <button class="btn btn-statistic">std</button>
       </div>
     </div>
   </main>
