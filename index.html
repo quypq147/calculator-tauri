@@ -5,19 +5,48 @@
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="/src/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tauri App</title>
   <script type="module" src="/src/main.ts" defer></script>
 </head>
 
 <body>
-  <main class="container">
+  <main class="container calculator">
+    <div class="top">
+      <div class="tool-bar">
+        <button class="btn btn-tool">View</button>
+        <button class="btn btn-tool">Edit</button>
+        <button class="btn btn-tool">Help</button>
+      </div>
+      <div class="display">
+        <div class="equation" id="equation">120 × 10.5</div>
+        <div class="result" id="result">1260</div>
+      </div>
+    </div>
 
+    <div class="bottom">
+      <div class="buttons">
+        <button class="btn btn-action">C</button>
+        <button class="btn btn-action">+/-</button>
+        <button class="btn btn-action">%</button>
+        <button class="btn btn-action">⌫</button>
+        <button class="btn btn-operator">÷</button>
+        <button class="btn">7</button>
+        <button class="btn">8</button>
+        <button class="btn">9</button>
+        <button class="btn btn-operator">×</button>
+        <button class="btn">4</button>
+        <button class="btn">5</button>
+        <button class="btn">6</button>
+        <button class="btn btn-operator">-</button>
+        <button class="btn">1</button>
+        <button class="btn">2</button>
+        <button class="btn">3</button>
+        <button class="btn btn-operator">+</button>
+        <button class="btn btn-zero">0</button>
+        <button class="btn">.</button>
+        <button class="btn btn-equals">=</button>
 
-    <form class="row" id="greet-form">
-      <input id="greet-input" placeholder="Enter a name..." />
-      <button type="submit">Greet</button>
-    </form>
-    <p id="greet-msg"></p>
+      </div>
+    </div>
   </main>
 </body>
 
