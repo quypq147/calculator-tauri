@@ -11,25 +11,47 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden;
 }
 
-// Calculator container
 .calculator {
-    width: 100%;
+    width: 320px;
+    max-width: 100%;
+    transition: width 0.3s ease;
     overflow: hidden;
     background: linear-gradient(180deg, #181818, #0d0d0d);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+
+    &.mode-scientific {
+        width: 500px;
+    }
+
+    &.mode-programmer {
+        width: 500px;
+    }
+
+    &.mode-statistic {
+        width: 500px;
+    }
 
     .top {
-        height: 250px;
+        padding-top: 1rem;
     }
 
     .bottom {
-        height: 450px;
+        padding: 1.2rem;
+        background: #f5f5f7;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        flex: 1;
+        overflow-y: auto;
     }
 }
 
-// Toolbar
+/* Toolbar */
 .tool-bar {
     display: flex;
     gap: 0.5rem;
@@ -50,11 +72,42 @@ body {
     }
 }
 
-// Display section
+.dropdown {
+    position: relative;
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #2c2c2c;
+        border: 1px solid #444;
+        padding: 0.5rem 0;
+        width: 150px;
+        border-radius: 8px;
+        z-index: 10;
+
+        .mode-option {
+            padding: 0.4rem 1rem;
+            color: #fff;
+            cursor: pointer;
+
+            &:hover {
+                background: #444;
+            }
+        }
+    }
+}
+
 .display {
     text-align: right;
     padding: 0 1.2rem;
     margin-bottom: 1rem;
+
+    .history {
+        color: #888;
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
 
     .equation {
         color: #667da7;
@@ -67,25 +120,17 @@ body {
         font-size: 2.8rem;
         font-weight: 700;
     }
-    .history {
-        color: #888;
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
 }
 
-// Button panel
-.bottom {
-    background: #f5f5f7;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    padding: 1.2rem;
-}
-
-.buttons {
+/* Buttons */
+.buttons,
+.scientific-buttons,
+.programmer-buttons,
+.statistic-buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.75rem;
+    margin-bottom: 1rem;
 
     .btn {
         background: #ffffffdd;
@@ -125,6 +170,7 @@ body {
         color: #555;
         font-weight: 500;
     }
+
     .btn-del {
         background: #ff6b6b;
         color: white;
@@ -134,54 +180,35 @@ body {
             background: #ff4d4d;
         }
     }
-}
-.hidden {
-  display: none;
-}
-.dropdown {
-  position: relative;
 
-  .btn-tool {
-    position: relative;
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #2c2c2c;
-    border: 1px solid #444;
-    padding: 0.5rem 0;
-    width: 150px;
-    border-radius: 8px;
-    z-index: 10;
-
-    .mode-option {
-      padding: 0.4rem 1rem;
-      color: #fff;
-      cursor: pointer;
-
-      &:hover {
-        background: #444;
-      }
+    .btn-scientific {
+        background: #eaf4ff;
+        color: #005c99;
+        font-weight: 600;
     }
-  }
-}
-.programmer-buttons,
-.statistic-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  margin-top: 1rem;
 
-  .btn {
-    background: #e6f7ff;
-    color: #007acc;
-    font-weight: bold;
-    border-radius: 18px;
-    padding: 1rem;
-    font-size: 1.1rem;
-  }
+    .btn-programmer {
+        background: #f2eaff;
+        color: #5f27cd;
+        font-weight: 600;
+    }
+
+    .btn-statistic {
+        background: #e6fff5;
+        color: #009975;
+        font-weight: 600;
+    }
 }
+
+.hidden {
+    display: none !important;
+}
+
+/* Scroll if too tall */
+.bottom::-webkit-scrollbar {
+    width: 0;
+}
+
+
 
 

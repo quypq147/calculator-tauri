@@ -1,15 +1,15 @@
-// === main.ts ===
 import { evaluate } from "mathjs";
 
-const equationEl = document.querySelector("#equation")! as HTMLDivElement;
-const resultEl = document.querySelector("#result")! as HTMLDivElement;
-const historyEl = document.querySelector("#history")! as HTMLDivElement;
+const equationEl = document.querySelector("#equation") as HTMLDivElement;
+const resultEl = document.querySelector("#result") as HTMLDivElement;
+const historyEl = document.querySelector("#history") as HTMLDivElement;
 
 const scientificPanel = document.getElementById("scientific-buttons")!;
 const programmerPanel = document.getElementById("programmer-buttons")!;
 const statisticPanel = document.getElementById("statistic-buttons")!;
-const viewBtn = document.querySelector(".dropdown .btn-tool")!;
+const viewBtn = document.querySelector(".btn-tool")!;
 const viewMenu = document.getElementById("view-menu")!;
+const calculatorEl = document.querySelector(".calculator")! as HTMLElement;
 
 let currentInput = "0";
 let currentEquation = "";
@@ -19,37 +19,41 @@ viewBtn.addEventListener("click", () => {
   viewMenu.classList.toggle("hidden");
 });
 
-// Chọn chế độ
 document.querySelectorAll(".mode-option").forEach((item) => {
   item.addEventListener("click", () => {
-    const mode = (item as HTMLElement).dataset.mode;
-
-    // Ẩn menu sau khi chọn
+    const mode = (item as HTMLElement).dataset.mode!;
     viewMenu.classList.add("hidden");
 
-    // Ẩn tất cả các phần mở rộng
+    // Ẩn tất cả panels
     scientificPanel.classList.add("hidden");
     programmerPanel.classList.add("hidden");
     statisticPanel.classList.add("hidden");
 
-    // Hiện phần tương ứng với mode
+    // Reset width classes
+    calculatorEl.classList.remove("mode-scientific", "mode-programmer", "mode-statistic");
+
     switch (mode) {
       case "scientific":
         scientificPanel.classList.remove("hidden");
+        calculatorEl.classList.add("mode-scientific");
         break;
       case "programmer":
         programmerPanel.classList.remove("hidden");
+        calculatorEl.classList.add("mode-programmer");
         break;
       case "statistic":
         statisticPanel.classList.remove("hidden");
+        calculatorEl.classList.add("mode-statistic");
         break;
       case "standard":
-        // Không hiện gì thêm
+      default:
+        // No panel
         break;
     }
+
+    console.log("Chuyển chế độ:", mode);
   });
 });
-
 
 function roundResult(value: number, digits = 10): number {
   return Math.round((value + Number.EPSILON) * 10 ** digits) / 10 ** digits;
@@ -213,3 +217,5 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+
